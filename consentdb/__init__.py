@@ -5,8 +5,16 @@ __version__ = '0.1.0'
 
 from os import environ
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('SQLALCHEMY_DATABASE_URI','sqlite:///:memory:')
-db = SQLAlchemy(app)
+def create_app():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('SQLALCHEMY_DATABASE_URI','sqlite:///:memory:')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+    from consentdb.models import db
+    db.init_app(app)
+    return app
+
+
+
+

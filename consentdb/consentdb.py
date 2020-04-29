@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """Main module."""
-from consentdb import db, app
+from consentdb import create_app
+from consentdb.models import ConsentRecord
 
-
-class ConsentRecord(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    mdn = db.Column(db.String(80), unique=True, nullable=False)
-    can_use = db.Column(db.Boolean, nullable=False)
-
-    def __repr__(self):
-        return f"{self.mdn}, can use:{self.can_use}"
+app = create_app()
 
 
 @app.route('/opt-out-test')
