@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, jsonify
 from flask.blueprints import Blueprint
 from flask.helpers import url_for
 
@@ -18,7 +18,7 @@ def opt_out():
     pid = request.args.get('pid')
     if not pid:
         return "missing parameter 'pid'", 400
-    record = ConsentRecord.query.filter_by(mdn=pid).first()
+    record = ConsentRecord.query.filter_by(pid=pid).first()
     if not record:
         return "Not found"
     if record.can_use:
@@ -29,7 +29,7 @@ def opt_out():
 
 @consentdb_blueprint.route('/opt-out-info')
 def opt_out_info():
-    return f"V1 API (opt-out), use {url_for('consentdb.opt_out', mdn='z1234567')}."
+    return f"V1 API (opt-out), use {url_for('consentdb.opt_out', pid='z1234567')}."
 
 
 @consentdb_blueprint.route('/consent/')
@@ -40,10 +40,9 @@ def consent_info():
 
 @consentdb_blueprint.route('/consent/<string:pid>')
 def consent(pid):
-    record = ConsentRecord.query.filter_by(mdn=pid).first()
-    if not record:
-        return 'record_not_found', 400
-    if record.can_use:
-        return "consent"
+    record = ConsentRecord.query.filter_by(pid=pid).first()
+    if record:
+        return jsonify(record.to_dict())
     else:
-        return "no_consent"
+        return 'record_not_found', 400
+

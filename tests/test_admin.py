@@ -5,6 +5,7 @@ import pytest
 
 from consentdb.admin import add_records
 from consentdb.models import db, ConsentRecord
+from tests.factories import ConsentRecordFactory
 
 
 @pytest.fixture(scope='module')
@@ -20,8 +21,8 @@ def init_test_database():
 
 def test_add(test_client, init_test_database):
 
-    add_records([ConsentRecord(mdn='z1234', can_use=True),
-                 ConsentRecord(mdn='z12345', can_use=True),
-                 ConsentRecord(mdn='z123456', can_use=True)])
+    add_records([ConsentRecordFactory(),
+                 ConsentRecordFactory(),
+                 ConsentRecordFactory()])
 
     assert len(ConsentRecord.query.all()) == 3
