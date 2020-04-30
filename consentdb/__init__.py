@@ -5,9 +5,11 @@ __version__ = '0.1.0'
 
 from os import environ
 from flask import Flask
-from consentdb.consentdb import recipes_blueprint
+from consentdb.consentdb import consentdb_blueprint
+
 
 def create_app():
+    """Init main flask applications and database"""
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('SQLALCHEMY_DATABASE_URI','sqlite:///:memory:')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -17,7 +19,7 @@ def create_app():
     app.app_context().push()
     db.create_all()
 
-    app.register_blueprint(recipes_blueprint)
+    app.register_blueprint(consentdb_blueprint)
     return app
 
 
