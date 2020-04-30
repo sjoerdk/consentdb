@@ -6,9 +6,9 @@ from consentdb import create_app
 from consentdb.models import db, ConsentRecord
 
 
-
 @pytest.fixture(scope='module')
 def test_client():
+    """A flask test client with some debug settings."""
     flask_app = create_app()
 
     # Bcrypt algorithm hashing rounds (reduced for testing purposes only!)
@@ -33,7 +33,8 @@ def test_client():
 
 
 @pytest.fixture(scope='module')
-def init_database():
+def init_test_database():
+    """Init database and add some test data"""
     # Create the database and the database table
     db.create_all()
 
@@ -47,7 +48,8 @@ def init_database():
     db.drop_all()
 
 
-def test_thing(test_client, init_database):
+def test_thing(test_client, init_test_database):
     response = test_client.post('/login')
     response = test_client.get('/opt-out-test')
+    test_client.get('/opt-out/?pid=1234')
     test = 1
