@@ -1,7 +1,7 @@
 """Top-level package for Consent database."""
 __author__ = """Sjoerd Kerkstra"""
 __email__ = 'sjoerd.kerkstra@radboudumc.nl'
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 
 from os import environ
 from flask import Flask
