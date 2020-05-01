@@ -14,9 +14,9 @@ def init_test_database():
     db.create_all()
 
     # Create some records
-    db.session.add(ConsentRecord(pid='z1234', can_use=True,
+    db.session.add(ConsentRecord(pid='01234', can_use=True,
                                  last_change=datetime(year=2010, month=1, day=1)))
-    db.session.add(ConsentRecord(pid='z12345', can_use=False,
+    db.session.add(ConsentRecord(pid='012345', can_use=False,
                                  last_change=datetime(year=2020, month=2, day=13)))
     db.session.commit()
 
@@ -26,12 +26,12 @@ def init_test_database():
 
 
 @pytest.mark.parametrize("url, expected_status, expected_data",
-                         [('/opt-outs/', 400, b'missing parameter'),
-                          ('/opt-outs', 400, b'missing parameter'),
-                          ('/opt-outs/?pid=1234', 200, b'Not found'),
-                          ('/opt-outs/?pid=z1234', 200, b'Not found'),
-                          ('/opt-outs/?pid=z12345', 200, b'Objection'),
-                          ('/opt-outs?pid=z12345', 200, b'Objection')])
+                         [('/opt-outs/', 400, b'Error - Please specify PID'),
+                          ('/opt-outs', 400, b'Error - Please specify PID'),
+                          ('/opt-outs/?pid=x1234', 200, b'not listed'),
+                          ('/opt-outs/?pid=01234', 200, b'not listed'),
+                          ('/opt-outs/?pid=012345', 200, b'objection'),
+                          ('/opt-outs?pid=012345', 200, b'objection')])
 def test_opt_out(test_client, init_test_database, url, expected_status,
                  expected_data):
     """Test expected responses for old opt-out system
@@ -46,8 +46,8 @@ def test_opt_out(test_client, init_test_database, url, expected_status,
 
 
 @pytest.mark.parametrize("url, expected_status, expected_data",
-                         [('/consent/z1234', 200, True),
-                          ('/consent/z12345', 200, False)])
+                         [('/consent/01234', 200, True),
+                          ('/consent/012345', 200, False)])
 def test_consent(test_client, init_test_database, url, expected_status,
                  expected_data):
     """Test expected responses for old opt-out system
@@ -63,7 +63,7 @@ def test_consent(test_client, init_test_database, url, expected_status,
 
 @pytest.mark.parametrize("url, expected_status, expected_data",
                          [('/consent/', 400, b'Missing patient ID'),
-                          ('/consent/1234', 400, b'record_not_found')])
+                          ('/consent/x1234', 400, b'record_not_found')])
 def test_consent_errors(test_client, init_test_database, url, expected_status,
                         expected_data):
     """Test expected responses for old opt-out system

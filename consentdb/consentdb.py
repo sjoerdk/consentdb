@@ -17,14 +17,14 @@ def index():
 def opt_out():
     pid = request.args.get('pid')
     if not pid:
-        return "missing parameter 'pid'", 400
+        return "Error - Please specify PID using ?pid=", 400
     record = ConsentRecord.query.filter_by(pid=pid).first()
     if not record:
-        return "Not found"
+        return "not listed"
     if record.can_use:
-        return "Not found"
+        return "not listed"
     else:
-        return "Objection"
+        return "objection"
 
 
 @consentdb_blueprint.route('/opt-out-info')
