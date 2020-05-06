@@ -1,0 +1,57 @@
+openapi: 3.0.1
+info:
+  title: consentdb
+  description: 'Consentdb tells you whether a patient has given consent for his or her data to be used.'
+  license:
+    name: MIT license
+  version: 1.0.0
+externalDocs:
+  description: consentdb docs
+  url: http://consentdb.readthedocs.io
+servers:
+- url: https://umcradanonp01.umcn.nl
+tags:
+- name: consent
+  description: Find out whether patient has given consent for data usage
+paths:
+  /consent/{pid}:
+    get:
+      tags:
+      - consent
+      summary: get consent record for given patient ID
+      parameters:
+        - name: pid
+          in: path
+          description: patient ID
+          required: true
+          schema:
+            type: string
+            format: 8 digits
+      responses:
+        200:
+          description: Consent record found
+          schema:
+            $ref: '#/components/schemas/consentrecord'
+
+        400:
+          description: Unknown ID supplied
+          content: {}
+
+components:
+  schemas:
+    consentrecord:
+      required:
+        - pid
+      type: object
+      properties:
+        pid:
+          type: string
+          example: 01234567
+        can_use:
+          type: boolean
+          description: If true, data from this patient can be used for research
+        last_change:
+          type: string
+          format: date-time
+          description: Last change to can_use (registration or change of consent choice)
+          example: Sat, 07 Sep 2013 01:13:00 GMT

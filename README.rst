@@ -31,7 +31,9 @@ Holds consent information. Does this person give permission for her or his data 
 Features
 --------
 
-* TODO
+* Models consent per patient via sqlalchemy
+* Web API via flask
+* Documented json reponses (openAPI 3.0)
 
 Credits
 -------

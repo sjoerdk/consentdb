@@ -34,8 +34,8 @@ def opt_out_info():
 
 @consentdb_blueprint.route('/consent/')
 def consent_info():
-    return f"Missing patient ID. Please use" \
-           f" {url_for('consentdb.consent', pid='<z1234567>')}.", 400
+    return f"Missing patient ID. Please " \
+           f"use {url_for('consentdb.consent', pid='1234567')}.", 400
 
 
 @consentdb_blueprint.route('/consent/<string:pid>')
@@ -44,5 +44,5 @@ def consent(pid):
     if record:
         return jsonify(record.to_dict())
     else:
-        return 'record_not_found', 400
+        return {}, 400
 
